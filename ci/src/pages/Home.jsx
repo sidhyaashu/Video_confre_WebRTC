@@ -1,6 +1,6 @@
 import "./Home.css";
 import { useSoket } from "../provider/Socket";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -10,12 +10,16 @@ const Home = () => {
   const [roomId, setRoomId] = useState();
 
 
-  const handleRoomJoined=({roomId})=>{
+  const handleRoomJoined=useCallback(({roomId})=>{
     navigate(`/room/${roomId}`)
-  }
+  },[navigate])
   useEffect(()=>{
     soket.on("joined-room",handleRoomJoined)
-  },[soket])
+
+    return()=>{
+      soket.off("joined-room",handleRoomJoined)
+    }
+  },[soket,handleRoomJoined])
 
   const handleJoin = (e) => {
     e.preventDefault();

@@ -36,6 +36,12 @@ io.on("connection", (soket) => {
     const soketId = emailToSoketMapping.get(email)
     soket.to(soketId).emit("incoming-call",{from:fromEmail,offer})
   });
+
+  soket.on("call-accepted", (data) => {
+    const { email, ans } = data;
+    const soketId = emailToSoketMapping.get(email)
+    soket.to(soketId).emit("call-accepted",{ans});
+  });
 });
 
 app.listen(PORT, () => {
